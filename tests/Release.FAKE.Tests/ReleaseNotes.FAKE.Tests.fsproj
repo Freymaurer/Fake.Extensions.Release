@@ -19,6 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Release.FAKE\Release.FAKE.fsproj" />
+    <ProjectReference Include="..\..\src\Release.FAKE\ReleaseNotes.FAKE.fsproj" />
   </ItemGroup>
 </Project>

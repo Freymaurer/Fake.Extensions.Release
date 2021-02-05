@@ -15,6 +15,8 @@ nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
 nuget Fake.Tools.Git //"
 
+#r "bin/ReleaseNotes.FAKE/netstandard2.0/ReleaseNotes.FAKE.dll"
+
 #if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
 #r "netstandard" // Temp fix for https://github.com/dotnet/fsharp/issues/5216
@@ -215,8 +217,7 @@ module DocumentationTasks =
 
         let lines = """(*** hide ***)
 (*** condition: prepare ***)
-#r @"..\packages\Newtonsoft.Json\lib\netstandard2.0\Newtonsoft.Json.dll"
-#r "../bin/Release.FAKE/netstandard2.1/Release.FAKE.dll"
+#r "../bin/Release.FAKE/netstandard2.0/Release.FAKE.dll"
 (*** condition: ipynb ***)
 #if IPYNB
 #r "nuget: Plotly.NET, {{fsdocs-package-version}}"
@@ -343,6 +344,34 @@ module ReleaseTasks =
             Git.Branches.push "temp/gh-pages"
         else failwith "aborted"
     }
+
+open ReleaseNotes.FAKE
+
+module ReleaseNotes =
+    
+    let createAssemblyVersion = BuildTask.create "createvfs" [] {
+        ReleaseNotes.FAKE.AssemblyVersion.create "Release.FAKE"
+    }
+
+    let updateReleaseNotes = BuildTask.createFn "Release" [] (fun config ->
+        let checkIsExisting = ReleaseNotes.FAKE.Release.exists()
+
+        ReleaseNotes.FAKE.Release.update config
+        
+    )
+
+    let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
+
+        let body = "We are ready to go for the first release!"
+
+        ReleaseNotes.FAKE.Github.draft(
+            "Freymaurer",
+            "ReleaseNotes.FAKE",
+            (Some body),
+            None,
+            config
+        )
+    )
 
 open BasicTasks
 open TestTasks

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Release.FAKE", "src\Release.FAKE\Release.FAKE.fsproj", "{ED8E445F-9463-449C-9657-44522A9FAA95}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ReleaseNotes.FAKE", "src\Release.FAKE\ReleaseNotes.FAKE.fsproj", "{ED8E445F-9463-449C-9657-44522A9FAA95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7246FAC5-EF00-4626-96E0-A16702407630}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Release.FAKE.Tests", "tests\Release.FAKE.Tests\Release.FAKE.Tests.fsproj", "{506E6E46-9264-490C-883B-2B33DA20DB10}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ReleaseNotes.FAKE.Tests", "tests\Release.FAKE.Tests\ReleaseNotes.FAKE.Tests.fsproj", "{506E6E46-9264-490C-883B-2B33DA20DB10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
