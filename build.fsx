@@ -13,8 +13,8 @@ nuget Fake.DotNet.Fsi
 nuget Fake.DotNet.NuGet
 nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
-nuget Fake.Tools.Git 
-nuget ReleaseNotes.FAKE //"
+nuget ReleaseNotes.FAKE prerelease
+nuget Fake.Tools.Git //"
 
 #if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
@@ -79,12 +79,6 @@ module ProjectInfo =
 
     let pkgDir = "pkg"
 
-    let release = ReleaseNotes.load "RELEASE_NOTES.md"
-
-    let stableVersion = SemVer.parse release.NugetVersion
-
-    let stableVersionTag = (sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch )
-
     let mutable prereleaseSuffix = ""
 
     let mutable prereleaseTag = ""
@@ -99,6 +93,9 @@ module BasicTasks =
     open ProjectInfo
 
     let setPrereleaseTag = BuildTask.create "SetPrereleaseTag" [] {
+
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
         printfn "Please enter pre-release package suffix"
         let suffix = System.Console.ReadLine()
         prereleaseSuffix <- suffix
@@ -154,6 +151,11 @@ module PackageTasks =
     open TestTasks
 
     let pack = BuildTask.create "Pack" [clean; build; runTests; copyBinaries] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         if promptYesNo (sprintf "creating stable package with version %s OK?" stableVersionTag ) 
             then
                 !! "src/**/*.*proj"
@@ -177,6 +179,7 @@ module PackageTasks =
     let packPrerelease = BuildTask.create "PackPrerelease" [setPrereleaseTag; clean; build; runTests; copyBinaries] {
         if promptYesNo (sprintf "package tag will be %s OK?" prereleaseTag )
             then 
+                let release = ReleaseNotes.load "RELEASE_NOTES.md"
                 !! "src/**/*.*proj"
                 //-- "src/**/Plotly.NET.Interactive.fsproj"
                 |> Seq.iter (Fake.DotNet.DotNet.pack (fun p ->
@@ -238,6 +241,11 @@ module DocumentationTasks =
     }
 
     let buildDocs = BuildTask.create "BuildDocs" [build; copyBinaries] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         printfn "building docs with stable version %s" stableVersionTag
         runDotNet 
             (sprintf "fsdocs build --eval --clean --property Configuration=Release --parameters fsdocs-package-version %s" stableVersionTag)
@@ -252,6 +260,11 @@ module DocumentationTasks =
     }
 
     let watchDocs = BuildTask.create "WatchDocs" [build; copyBinaries] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         printfn "watching docs with stable version %s" stableVersionTag
         runDotNet 
             (sprintf "fsdocs watch --eval --clean --property Configuration=Release --parameters fsdocs-package-version %s" stableVersionTag)
@@ -276,6 +289,11 @@ module ReleaseTasks =
     open DocumentationTasks
 
     let createTag = BuildTask.create "CreateTag" [clean; build; copyBinaries; runTests; pack] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         if promptYesNo (sprintf "tagging branch with %s OK?" stableVersionTag ) then
             Git.Branches.tag "" stableVersionTag
             Git.Branches.pushTag "" projectRepo stableVersionTag
@@ -292,6 +310,11 @@ module ReleaseTasks =
     }
     
     let publishNuget = BuildTask.create "PublishNuget" [clean; build; copyBinaries; runTests; pack] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         let targets = (!! (sprintf "%s/*.*pkg" pkgDir ))
         for target in targets do printfn "%A" target
         let msg = sprintf "release package with version %s?" stableVersionTag
@@ -318,6 +341,11 @@ module ReleaseTasks =
     }
 
     let releaseDocs =  BuildTask.create "ReleaseDocs" [buildDocs] {
+        let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
+        let stableVersion = SemVer.parse release.NugetVersion
+
+        let stableVersionTag = sprintf "%i.%i.%i" stableVersion.Major stableVersion.Minor stableVersion.Patch 
         let msg = sprintf "release docs for version %s?" stableVersionTag
         if promptYesNo msg then
             Shell.cleanDir "temp"
@@ -343,32 +371,30 @@ module ReleaseTasks =
         else failwith "aborted"
     }
 
-//open ReleaseNotes.
-
-//module ReleaseNotes =
+module ReleaseNoteTasks =
     
-//    let createAssemblyVersion = BuildTask.create "createvfs" [] {
-//        ReleaseNotes.FAKE.AssemblyVersion.create "Release.FAKE"
-//    }
+    let createAssemblyVersion = BuildTask.create "createvfs" [] {
+        ReleaseNotes.FAKE.AssemblyVersion.create "ReleaseNotes.FAKE"
+    }
 
-//    let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
-//        let checkIsExisting = ReleaseNotes.FAKE.Release.exists()
+    let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
+        ReleaseNotes.FAKE.Release.exists()
 
-//        ReleaseNotes.FAKE.Release.update config
-//    )
+        ReleaseNotes.FAKE.Release.update config
+    )
 
-//    let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
+    let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
 
-//        let body = "We are ready to go for the first release!"
+        let body = "We are ready to go for the first release!"
 
-//        ReleaseNotes.FAKE.Github.draft(
-//            "Freymaurer",
-//            "ReleaseNotes.FAKE",
-//            (Some body),
-//            None,
-//            config
-//        )
-//    )
+        ReleaseNotes.FAKE.Github.draft(
+            "Freymaurer",
+            "ReleaseNotes.FAKE",
+            (Some body),
+            None,
+            config
+        )
+    )
 
 open BasicTasks
 open TestTasks
@@ -389,4 +415,4 @@ let _preRelease =
         [setPrereleaseTag; clean; build; copyBinaries; runTests; packPrerelease; buildDocsPrerelease; createPrereleaseTag; publishNugetPrerelease; prereleaseDocs]
 
 // run copyBinaries by default
-BuildTask.runOrDefault copyBinaries
+BuildTask.runOrDefaultWithArguments copyBinaries

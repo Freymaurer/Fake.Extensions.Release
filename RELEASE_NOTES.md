@@ -1,1 +1,12 @@
-### 0.0.2-alpha1 - 1/27/2021
+### 0.1.0+04d1508 (Released 2021-2-5)
+* Additions:
+    * latest commit #04d1508
+    * [[#7979ee3](https://github.com/nfdi4plants/Swate/commit/7979ee39192e239c5cabd083fe7f871e42d43c2a)] Initial commit :tada:
+    * [[#d76e3ce](https://github.com/nfdi4plants/Swate/commit/d76e3ce5b94a1acadd54881042cb605f072df1cb)] Repo name change and basic functionality added
+* Bugfixes:
+    * [[#dcdb4ad](https://github.com/nfdi4plants/Swate/commit/dcdb4ad8d5624a44eeb9f5a42ed0bf628fa5e1e0)] Fix naming errors
+    * [[#04d1508](https://github.com/nfdi4plants/Swate/commit/04d15086c1de5bde9650b15d081294617e78bddc)] Fix reference issues
+
+### 0.0.0 (Released 2021-2-5)
+* Additions:
+    * Initial set up for RELEASE_Notes.md
