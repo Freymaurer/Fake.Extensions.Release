@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.7.2" />
     <PackageReference Include="Fake.Core.Target" Version="5.20.3" />
     <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.20.3" />
     <PackageReference Include="Fake.IO.FileSystem" Version="5.20.3" />

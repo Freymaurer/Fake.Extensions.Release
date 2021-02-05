@@ -13,9 +13,8 @@ nuget Fake.DotNet.Fsi
 nuget Fake.DotNet.NuGet
 nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
-nuget Fake.Tools.Git //"
-
-//#r "bin/ReleaseNotes.FAKE/netstandard2.0/ReleaseNotes.FAKE.dll"
+nuget Fake.Tools.Git 
+nuget ReleaseNotes.FAKE //"
 
 #if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
@@ -344,7 +343,7 @@ module ReleaseTasks =
         else failwith "aborted"
     }
 
-//open ReleaseNotes.FAKE
+//open ReleaseNotes.
 
 //module ReleaseNotes =
     
