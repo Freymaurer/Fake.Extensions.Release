@@ -15,10 +15,10 @@
     <PackageReference Include="Expecto" Version="9.*" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" Version="0.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.*" />
-    <PackageReference Update="FSharp.Core" Version="5.*" />
+    <PackageReference Update="FSharp.Core" Version="4.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Release.FAKE\ReleaseNotes.FAKE.fsproj" />
+    <ProjectReference Include="..\..\src\ReleaseNotes.FAKE\ReleaseNotes.FAKE.fsproj" />
   </ItemGroup>
 </Project>

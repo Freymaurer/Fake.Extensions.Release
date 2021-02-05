@@ -15,7 +15,7 @@ nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
 nuget Fake.Tools.Git //"
 
-#r "bin/ReleaseNotes.FAKE/netstandard2.0/ReleaseNotes.FAKE.dll"
+//#r "bin/ReleaseNotes.FAKE/netstandard2.0/ReleaseNotes.FAKE.dll"
 
 #if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
@@ -61,9 +61,9 @@ let runDotNet cmd workingDir =
 /// Metadata about the project
 module ProjectInfo = 
 
-    let project = "Release.FAKE"
+    let project = "ReleaseNotes.FAKE"
 
-    let summary = "A libary for extended release functions using FAKE."
+    let summary = "A libary for extended release notes functions using FAKE."
 
     let configuration = "Release"
 
@@ -92,7 +92,7 @@ module ProjectInfo =
 
     let mutable isPrerelease = false
 
-    let testProject = "tests/Release.FAKE.Tests/Release.FAKE.Tests.fsproj"
+    let testProject = "tests/ReleaseNotes.FAKE.Tests/ReleaseNotes.FAKE.Tests.fsproj"
 
 /// Barebones, minimal build tasks
 module BasicTasks = 
@@ -291,7 +291,6 @@ module ReleaseTasks =
         else
             failwith "aborted"
     }
-
     
     let publishNuget = BuildTask.create "PublishNuget" [clean; build; copyBinaries; runTests; pack] {
         let targets = (!! (sprintf "%s/*.*pkg" pkgDir ))
@@ -345,33 +344,32 @@ module ReleaseTasks =
         else failwith "aborted"
     }
 
-open ReleaseNotes.FAKE
+//open ReleaseNotes.FAKE
 
-module ReleaseNotes =
+//module ReleaseNotes =
     
-    let createAssemblyVersion = BuildTask.create "createvfs" [] {
-        ReleaseNotes.FAKE.AssemblyVersion.create "Release.FAKE"
-    }
+//    let createAssemblyVersion = BuildTask.create "createvfs" [] {
+//        ReleaseNotes.FAKE.AssemblyVersion.create "Release.FAKE"
+//    }
 
-    let updateReleaseNotes = BuildTask.createFn "Release" [] (fun config ->
-        let checkIsExisting = ReleaseNotes.FAKE.Release.exists()
+//    let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
+//        let checkIsExisting = ReleaseNotes.FAKE.Release.exists()
 
-        ReleaseNotes.FAKE.Release.update config
-        
-    )
+//        ReleaseNotes.FAKE.Release.update config
+//    )
 
-    let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
+//    let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
 
-        let body = "We are ready to go for the first release!"
+//        let body = "We are ready to go for the first release!"
 
-        ReleaseNotes.FAKE.Github.draft(
-            "Freymaurer",
-            "ReleaseNotes.FAKE",
-            (Some body),
-            None,
-            config
-        )
-    )
+//        ReleaseNotes.FAKE.Github.draft(
+//            "Freymaurer",
+//            "ReleaseNotes.FAKE",
+//            (Some body),
+//            None,
+//            config
+//        )
+//    )
 
 open BasicTasks
 open TestTasks
