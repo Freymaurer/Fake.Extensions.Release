@@ -81,8 +81,7 @@ module Github =
             let assetsPaths = Fake.IO.DirectoryInfo.getFiles assetDir
             assetsPaths |> Array.map (fun x -> x.FullName)
 
-        let _ =
-
+        let draft = 
             if assetPath.IsSome then
 
                 GitHub.createClientWithToken token

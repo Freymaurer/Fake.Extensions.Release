@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <Compile Include="AssemblyVersion.fs" />
-    <Compile Include="Github.fs" />
     <Compile Include="Release.fs" />
+    <Compile Include="Github.fs" />
   </ItemGroup>
 
   <ItemGroup>

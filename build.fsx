@@ -21,6 +21,8 @@ nuget Fake.Tools.Git //"
 #r "netstandard" // Temp fix for https://github.com/dotnet/fsharp/issues/5216
 #endif
 
+open ReleaseNotes.FAKE
+
 open BlackFox.Fake
 open System.IO
 open Fake.Core
