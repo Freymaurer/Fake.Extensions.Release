@@ -154,4 +154,4 @@ Exmp: `fake build -t githubdraft token:uniquetokenitdent`
 
 This will create a github release draft with the latest release notes and a customizable body message shown above.
 
-![Github release draft exmp](docs\img\draft_exmp.png "Github release draft example")
+![Github release draft exmp](docs/img/draft_exmp.png)
