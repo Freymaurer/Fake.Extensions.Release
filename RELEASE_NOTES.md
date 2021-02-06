@@ -1,6 +1,7 @@
-### 0.1.0+75e3342 (Released 2021-2-5)
+### 0.1.0+510d781 (Released 2021-2-6)
 * Additions:
-    * latest commit #75e3342
+    * latest commit #510d781
+    * [[#510d781](https://github.com/nfdi4plants/Swate/commit/510d781d0c17f7bcee3183fbfa87948c7295268c)] Added documentation :books:
     * [[#75e3342](https://github.com/nfdi4plants/Swate/commit/75e3342607582c42df597e1a292707fe05746ec5)] Self reference in build.fsx and create RELEASE_NOTES.md
     * [[#7979ee3](https://github.com/nfdi4plants/Swate/commit/7979ee39192e239c5cabd083fe7f871e42d43c2a)] Initial commit :tada:
     * [[#d76e3ce](https://github.com/nfdi4plants/Swate/commit/d76e3ce5b94a1acadd54881042cb605f072df1cb)] Repo name change and basic functionality added
