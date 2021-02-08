@@ -1,4 +1,4 @@
-﻿namespace ReleaseNotes.FAKE
+﻿namespace Fake.Extensions.Release
 
 open Fake.Core
 open System
@@ -133,7 +133,7 @@ module Release =
 
 
     /// Updates RELEASE_NOTES.md by accessing git commits.
-    let update(config:TargetParameter)=
+    let update(owner:string, repoName:string, config:TargetParameter)=
 
         let nOfLastCommitsToCheck =
             let opt =
@@ -207,7 +207,7 @@ module Release =
                     | _ -> true
                 )
                 |> Array.map (fun x ->
-                    sprintf "    * [[#%s](https://github.com/nfdi4plants/Swate/commit/%s)] %s" x.[1] x.[0] x.[2]
+                    sprintf "    * [[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
                 )
                 |> List.ofArray
             let additions, deletions, bugs = sortCommitsByKeyWords formattedCommitNoteList [] [] []
