@@ -62,7 +62,7 @@ let runDotNet cmd workingDir =
 /// Metadata about the project
 module ProjectInfo = 
 
-    let project = "Fake.Extensions.Release"
+    let project = "src/Fake.Extensions.Release/Fake.Extensions.Release.fsproj"
 
     let summary = "A libary for extended release notes functions using FAKE."
 
@@ -71,7 +71,7 @@ module ProjectInfo =
     // Git configuration (used for publishing documentation in gh-pages branch)
     // The profile where the project is posted
     let gitOwner = "Freymaurer"
-    let gitName = "Kevin Frey"
+    let gitName = "Fake.Extensions.Release"
 
     let gitHome = sprintf "%s/%s" "https://github.com" gitOwner
 
@@ -152,6 +152,12 @@ module PackageTasks =
     open BasicTasks
     open TestTasks
 
+    open System.Text.RegularExpressions
+
+    let commitLinkPattern = @"\[\[#[a-z0-9]*\]\(.*\)\] "
+
+    let replaceCommitLink input= Regex.Replace(input,commitLinkPattern,"")
+
     let pack = BuildTask.create "Pack" [clean; build; runTests; copyBinaries] {
         let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
@@ -166,7 +172,7 @@ module PackageTasks =
                         {p.MSBuildParams with 
                             Properties = ([
                                 "Version",stableVersionTag
-                                "PackageReleaseNotes",  (release.Notes |> String.concat "\r\n")
+                                "PackageReleaseNotes",  (release.Notes |> List.map replaceCommitLink |> String.concat "\r\n")
                             ] @ p.MSBuildParams.Properties)
                         }
                     {
@@ -189,7 +195,7 @@ module PackageTasks =
                                 {p.MSBuildParams with 
                                     Properties = ([
                                         "Version", prereleaseTag
-                                        "PackageReleaseNotes",  (release.Notes |> String.toLines )
+                                        "PackageReleaseNotes",  (release.Notes |> List.map replaceCommitLink |> String.toLines )
                                     ] @ p.MSBuildParams.Properties)
                                 }
                             {
@@ -374,14 +380,9 @@ module ReleaseTasks =
     }
 
 module ReleaseNoteTasks =
-    
-    let test = BuildTask.create "test" [] {
-        let r = Fake.Tools.Git.Information.describe ""
-        printfn "%A" r
-    }
 
     let createAssemblyVersion = BuildTask.create "createvfs" [] {
-        ReleaseNotes.FAKE.AssemblyVersion.create "ReleaseNotes.FAKE"
+        ReleaseNotes.FAKE.AssemblyVersion.create ProjectInfo.gitName
     }
 
     let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
@@ -396,7 +397,7 @@ module ReleaseNoteTasks =
 
         ReleaseNotes.FAKE.Github.draft(
             ProjectInfo.gitOwner,
-            ProjectInfo.project,
+            ProjectInfo.gitName,
             (Some body),
             None,
             config

@@ -2,7 +2,7 @@
 
 A libary for extended release notes functions using FAKE.
 
-- [Fake.Extensions.Release](#releasenotesfake)
+- [Fake.Extensions.Release](#fakeextensionsrelease)
   - [Install/Use](#installuse)
   - [Example build.fsx module](#example-buildfsx-module)
   - [API](#api)
@@ -10,6 +10,7 @@ A libary for extended release notes functions using FAKE.
     - [ReleaseNotes.FAKE.Release.exists](#releasenotesfakereleaseexists)
     - [ReleaseNotes.FAKE.Release.update](#releasenotesfakereleaseupdate)
     - [ReleaseNotes.FAKE.Github.draft](#releasenotesfakegithubdraft)
+    - [Release Notes in Nuget](#release-notes-in-nuget)
 
 ## Install/Use
 
@@ -158,3 +159,17 @@ Exmp: `fake build -t githubdraft token:uniquetokenitdent`
 This will create a github release draft with the latest release notes and a customizable body message shown above.
 
 ![Github release draft exmp](docs/img/draft_exmp.png)
+
+### Release Notes in Nuget
+
+Should you use the generated RELEASE_NOTES.md to populate your nuget release notes you migth want to remove the commit urls as nuget does not parse markdown.
+
+You cna do this with the following functions.
+
+```fsharp
+open System.Text.RegularExpressions
+
+let commitLinkPattern = @"\[\[#[a-z0-9]*\]\(.*\)\] "
+
+let replaceCommitLink input= Regex.Replace(input,commitLinkPattern,"")
+```

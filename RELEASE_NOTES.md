@@ -1,3 +1,11 @@
+### 0.2.0+55dc4b9 (Released 2021-2-8)
+* Additions:
+    * latest commit #55dc4b9
+    * [[#bc4553d](https://github.com/nfdi4plants/Swate/commit/bc4553d438bc76a662048bae705116b60dd91839)] Update README.md :books:
+    * [[#55dc4b9](https://github.com/nfdi4plants/Swate/commit/55dc4b9ba64eaf676809436f0e69f4a9106fa729)] Change library namespace (Issue #1)
+* Bugfixes:
+    * [[#9598d25](https://github.com/nfdi4plants/Swate/commit/9598d25f00a4876e789a1e8d05919014feca3b03)] Fix hardcoded commit url (Issue #2)
+
 ### 0.1.0+510d781 (Released 2021-2-6)
 * Additions:
     * latest commit #510d781
