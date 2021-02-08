@@ -13,7 +13,7 @@ nuget Fake.DotNet.Fsi
 nuget Fake.DotNet.NuGet
 nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
-nuget ReleaseNotes.FAKE prerelease
+nuget ReleaseNotes.FAKE
 nuget Fake.Tools.Git //"
 
 #if !FAKE
@@ -62,7 +62,7 @@ let runDotNet cmd workingDir =
 /// Metadata about the project
 module ProjectInfo = 
 
-    let project = "ReleaseNotes.FAKE"
+    let project = "Fake.Extensions.Release"
 
     let summary = "A libary for extended release notes functions using FAKE."
 
@@ -87,7 +87,7 @@ module ProjectInfo =
 
     let mutable isPrerelease = false
 
-    let testProject = "tests/ReleaseNotes.FAKE.Tests/ReleaseNotes.FAKE.Tests.fsproj"
+    let testProject = "tests/Fake.Extensions.Release.Tests/Fake.Extensions.Release.Tests.fsproj"
 
 /// Barebones, minimal build tasks
 module BasicTasks = 
@@ -375,6 +375,11 @@ module ReleaseTasks =
 
 module ReleaseNoteTasks =
     
+    let test = BuildTask.create "test" [] {
+        let r = Fake.Tools.Git.Information.describe ""
+        printfn "%A" r
+    }
+
     let createAssemblyVersion = BuildTask.create "createvfs" [] {
         ReleaseNotes.FAKE.AssemblyVersion.create "ReleaseNotes.FAKE"
     }
@@ -390,8 +395,8 @@ module ReleaseNoteTasks =
         let body = "We are ready to go for the first release!"
 
         ReleaseNotes.FAKE.Github.draft(
-            "Freymaurer",
-            "ReleaseNotes.FAKE",
+            ProjectInfo.gitOwner,
+            ProjectInfo.project,
             (Some body),
             None,
             config

@@ -1,4 +1,4 @@
-﻿module ReleaseNotes.FAKE.Tests
+﻿module Fake.Extensions.Release.Tests
 open Expecto
 
 [<EntryPoint>]

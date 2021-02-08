@@ -1,4 +1,4 @@
-﻿namespace ReleaseNotes.FAKE
+﻿namespace Fake.Extensions.Release
 
 open Fake.Core
 

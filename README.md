@@ -1,8 +1,8 @@
-# ReleaseNotes.FAKE
+# Fake.Extensions.Release
 
 A libary for extended release notes functions using FAKE.
 
-- [ReleaseNotes.FAKE](#releasenotesfake)
+- [Fake.Extensions.Release](#releasenotesfake)
   - [Install/Use](#installuse)
   - [Example build.fsx module](#example-buildfsx-module)
   - [API](#api)
@@ -20,6 +20,7 @@ Note: `nuget ReleaseNotes.FAKE`
 #r "paket:
 nuget BlackFox.Fake.BuildTask
 nuget ReleaseNotes.FAKE
+nuget Fake.Extensions.Release
 nuget Fake.Core.Target
 nuget Fake.Core.Process
 nuget Fake.Core.ReleaseNotes
@@ -40,7 +41,7 @@ nuget Fake.Tools.Git //"
 #r "netstandard" // Temp fix for https://github.com/dotnet/fsharp/issues/5216
 #endif
 
-open ReleaseNotes.FAKE
+open Fake.Extensions.Release
 ```
 
 Should you not be able to use `open ReleaseNotes.FAKE` try the following:
@@ -55,23 +56,25 @@ While testing i ran into some erros that you might also encounter:
 - When using BlackFox.Fake.BuildTask make sure to reference `BuildTask.runOrDefaultWithArguments defaultTask` at the bottom of .fsx. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. This is necessary as the several `ReleaseNotes.FAKE` targets take additional parameters. 
 
 ```fsharp
+open Fake.Extensions.Release
+
 module ReleaseNoteTasks =
     
     let createAssemblyVersion = BuildTask.create "createvfs" [] {
-        ReleaseNotes.FAKE.AssemblyVersion.create "ReleaseNotes.FAKE"
+        AssemblyVersion.create "ReleaseNotes.FAKE"
     }
 
     let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
-        ReleaseNotes.FAKE.Release.exists()
+        Release.exists()
 
-        ReleaseNotes.FAKE.Release.update config
+        Release.update "Freymaurer" "Fake.Extensions.Release" config
     )
 
     let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
 
         let body = "We are ready to go for the first release!"
 
-        ReleaseNotes.FAKE.Github.draft(
+        Github.draft(
             "Freymaurer",
             "ReleaseNotes.FAKE",
             (Some body),
@@ -131,12 +134,12 @@ Here are the current RELEASE_NOTES.md for this repo.
 ### 0.1.0+75e3342 (Released 2021-2-5)
 * Additions:
     * latest commit #75e3342
-    * [[#75e3342](https://github.com/nfdi4plants/Swate/commit/75e3342607582c42df597e1a292707fe05746ec5)] Self reference in build.fsx and create RELEASE_NOTES.md
-    * [[#7979ee3](https://github.com/nfdi4plants/Swate/commit/7979ee39192e239c5cabd083fe7f871e42d43c2a)] Initial commit :tada:
-    * [[#d76e3ce](https://github.com/nfdi4plants/Swate/commit/d76e3ce5b94a1acadd54881042cb605f072df1cb)] Repo name change and basic functionality added
+    * [[#75e3342](https://github.com/Freymaurer/Fake.Extensions.Release/commit/75e3342607582c42df597e1a292707fe05746ec5)] Self reference in build.fsx and create RELEASE_NOTES.md
+    * [[#7979ee3](https://github.com/Freymaurer/Fake.Extensions.Release/commit/7979ee39192e239c5cabd083fe7f871e42d43c2a)] Initial commit :tada:
+    * [[#d76e3ce](https://github.com/Freymaurer/Fake.Extensions.Release/commit/d76e3ce5b94a1acadd54881042cb605f072df1cb)] Repo name change and basic functionality added
 * Bugfixes:
-    * [[#dcdb4ad](https://github.com/nfdi4plants/Swate/commit/dcdb4ad8d5624a44eeb9f5a42ed0bf628fa5e1e0)] Fix naming errors
-    * [[#04d1508](https://github.com/nfdi4plants/Swate/commit/04d15086c1de5bde9650b15d081294617e78bddc)] Fix reference issues
+    * [[#dcdb4ad](https://github.com/Freymaurer/Fake.Extensions.Release/commit/dcdb4ad8d5624a44eeb9f5a42ed0bf628fa5e1e0)] Fix naming errors
+    * [[#04d1508](https://github.com/Freymaurer/Fake.Extensions.Release/commit/04d15086c1de5bde9650b15d081294617e78bddc)] Fix reference issues
 
 ### 0.0.0 (Released 2021-2-5)
 * Additions:
