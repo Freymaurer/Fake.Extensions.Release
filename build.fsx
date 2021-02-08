@@ -13,15 +13,13 @@ nuget Fake.DotNet.Fsi
 nuget Fake.DotNet.NuGet
 nuget Fake.Api.Github
 nuget Fake.DotNet.Testing.Expecto 
-nuget ReleaseNotes.FAKE
+nuget Fake.Extensions.Release
 nuget Fake.Tools.Git //"
 
 #if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
 #r "netstandard" // Temp fix for https://github.com/dotnet/fsharp/issues/5216
 #endif
-
-open ReleaseNotes.FAKE
 
 open BlackFox.Fake
 open System.IO
@@ -381,21 +379,23 @@ module ReleaseTasks =
 
 module ReleaseNoteTasks =
 
+    open Fake.Extensions.Release
+
     let createAssemblyVersion = BuildTask.create "createvfs" [] {
-        ReleaseNotes.FAKE.AssemblyVersion.create ProjectInfo.gitName
+        AssemblyVersion.create ProjectInfo.gitName
     }
 
     let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
-        ReleaseNotes.FAKE.Release.exists()
+        Release.exists()
 
-        ReleaseNotes.FAKE.Release.update config
+        Release.update(ProjectInfo.gitOwner, ProjectInfo.gitName, config)
     )
 
     let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
 
         let body = "We are ready to go for the first release!"
 
-        ReleaseNotes.FAKE.Github.draft(
+        Github.draft(
             ProjectInfo.gitOwner,
             ProjectInfo.gitName,
             (Some body),

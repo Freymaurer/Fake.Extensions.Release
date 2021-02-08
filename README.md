@@ -57,18 +57,25 @@ While testing i ran into some erros that you might also encounter:
 - When using BlackFox.Fake.BuildTask make sure to reference `BuildTask.runOrDefaultWithArguments defaultTask` at the bottom of .fsx. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. This is necessary as the several `ReleaseNotes.FAKE` targets take additional parameters. 
 
 ```fsharp
-open Fake.Extensions.Release
-
-module ReleaseNoteTasks =
+module ProjectInfo =
     
+    let gitOwner = "Freymaurer"
+    let gitName = "Fake.Extensions.Release"
+```
+
+```fsharp
+module ReleaseNoteTasks =
+
+    open Fake.Extensions.Release
+
     let createAssemblyVersion = BuildTask.create "createvfs" [] {
-        AssemblyVersion.create "ReleaseNotes.FAKE"
+        AssemblyVersion.create ProjectInfo.gitName
     }
 
     let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
         Release.exists()
 
-        Release.update "Freymaurer" "Fake.Extensions.Release" config
+        Release.update(ProjectInfo.gitOwner, ProjectInfo.gitName, config)
     )
 
     let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
@@ -76,8 +83,8 @@ module ReleaseNoteTasks =
         let body = "We are ready to go for the first release!"
 
         Github.draft(
-            "Freymaurer",
-            "ReleaseNotes.FAKE",
+            ProjectInfo.gitOwner,
+            ProjectInfo.gitName,
             (Some body),
             None,
             config
