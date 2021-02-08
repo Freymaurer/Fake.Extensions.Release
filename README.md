@@ -15,12 +15,11 @@ A libary for extended release notes functions using FAKE.
 ## Install/Use
 
 The following shows an example dependency reference part for a build.fsx.
-Note: `nuget ReleaseNotes.FAKE`
+Note: `nuget Fake.Extensions.Release`
 
 ```fsharp
 #r "paket:
 nuget BlackFox.Fake.BuildTask
-nuget ReleaseNotes.FAKE
 nuget Fake.Extensions.Release
 nuget Fake.Core.Target
 nuget Fake.Core.Process
@@ -45,7 +44,7 @@ nuget Fake.Tools.Git //"
 open Fake.Extensions.Release
 ```
 
-Should you not be able to use `open ReleaseNotes.FAKE` try the following:
+Should you not be able to use `open Fake.Extensions.Release` try the following:
 - if using local tools `dotnet fake run build.fsx` else `fake run build.fsx` in the same directory as your `build.fsx`
 - delete `build.fsx.lock` and `.fake` directory in the same directory as your `build.fsx` then try the step above again.
 
@@ -54,7 +53,7 @@ Should you not be able to use `open ReleaseNotes.FAKE` try the following:
 You can add the following to your build.fsx.
 
 While testing i ran into some erros that you might also encounter:
-- When using BlackFox.Fake.BuildTask make sure to reference `BuildTask.runOrDefaultWithArguments defaultTask` at the bottom of .fsx. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. This is necessary as the several `ReleaseNotes.FAKE` targets take additional parameters. 
+- When using BlackFox.Fake.BuildTask make sure to reference `BuildTask.runOrDefaultWithArguments defaultTask` at the bottom of .fsx. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. This is necessary as the several `Fake.Extensions.Release` targets take additional parameters. 
 
 ```fsharp
 module ProjectInfo =
@@ -94,7 +93,7 @@ module ReleaseNoteTasks =
 
 ## API
 
-### ReleaseNotes.FAKE.AssemblyVersion.create
+### AssemblyVersion.create
 
 This function creates a AssemblyVersion.fs in the same directory as `build.fsx` with the following content. It accesses the RELEASE_NOTES.md for version and date information. 
 
@@ -103,19 +102,18 @@ This function creates a AssemblyVersion.fs in the same directory as `build.fsx` 
 namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("ReleaseNotes.FAKE")>]
-[<assembly: AssemblyVersionAttribute("0.1.0")>]
-[<assembly: AssemblyMetadataAttribute("ReleaseDate","05/02/2021")>]
+[<assembly: AssemblyTitleAttribute("Fake.Extensions.Release")>]
+[<assembly: AssemblyVersionAttribute("0.2.0")>]
+[<assembly: AssemblyMetadataAttribute("ReleaseDate","08/02/2021")>]
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] AssemblyTitle = "ReleaseNotes.FAKE" 
-    let [<Literal>] AssemblyVersion = "0.1.0"
-    let [<Literal>] AssemblyMetadata_ReleaseDate = "05/02/2021"
-
+    let [<Literal>] AssemblyTitle = "Fake.Extensions.Release"
+    let [<Literal>] AssemblyVersion = "0.2.0"
+    let [<Literal>] AssemblyMetadata_ReleaseDate = "08/02/2021"
 ```
 
-### ReleaseNotes.FAKE.Release.exists 
+### Release.exists 
 
 This functions checks if RELEASE_NOTES.md exists on the same directory level and if not creates it with the following content.
 
@@ -125,7 +123,7 @@ This functions checks if RELEASE_NOTES.md exists on the same directory level and
     * Initial set up for RELEASE_Notes.md
 ```
 
-### ReleaseNotes.FAKE.Release.update
+### Release.update
 
 This is the core function of this repo. It takes optional parameters:
 - semver:patch -> increases 0.0.X
@@ -156,7 +154,7 @@ Here are the current RELEASE_NOTES.md for this repo.
 
 This function needs certain keywords to correctly function. If the `latest commit #xxxxxx` is removed all found commits will be added to the newest release. Should a commit hash not exist in the last x commits the function will error.
 
-### ReleaseNotes.FAKE.Github.draft
+### Github.draft
 
 This function will use the latest release notes from RELEASE_NOTES.md and push them to a Github release draft. To do this the function needs an additional parameter `token:GithubToken`. Such a GithubToken can be created here: https://github.com/settings/tokens.
 Alternatively you can set the GithubToken as environmental variable with the name `github_token`.
