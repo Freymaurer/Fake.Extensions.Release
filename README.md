@@ -19,7 +19,7 @@ Note: `nuget ReleaseNotes.FAKE`
 ```fsharp
 #r "paket:
 nuget BlackFox.Fake.BuildTask
-nuget ReleaseNotes.FAKE prerelease
+nuget ReleaseNotes.FAKE
 nuget Fake.Core.Target
 nuget Fake.Core.Process
 nuget Fake.Core.ReleaseNotes
@@ -106,7 +106,7 @@ module internal AssemblyVersionInformation =
 
 ### ReleaseNotes.FAKE.Release.exists 
 
-This functions checks if RELEASE_NOTES.md exists on the same directory level and if not creates it wiht the following content.
+This functions checks if RELEASE_NOTES.md exists on the same directory level and if not creates it with the following content.
 
 ```md
 ### 0.0.0 (Released 2021-2-5)
@@ -154,4 +154,4 @@ Exmp: `fake build -t githubdraft token:uniquetokenitdent`
 
 This will create a github release draft with the latest release notes and a customizable body message shown above.
 
-![Github release draft exmp](docs\img\draft_exmp.png "Github release draft example")
+![Github release draft exmp](docs/img/draft_exmp.png)
