@@ -14,6 +14,9 @@ A libary for extended release notes functions using FAKE.
 
 ## Install/Use
 
+### Dependency
+This library uses [git](https://git-scm.com/downloads) to access your commit history. For me it worked with `2.32.0`. Please open an issue in case you get problems.
+
 The following shows an example dependency reference part for a build.fsx.
 Note: `nuget Fake.Extensions.Release`
 
