@@ -7,19 +7,19 @@
 
   <ItemGroup>
     <Compile Include="AssemblyVersion.fs" />
-    <Compile Include="Release.fs" />
+    <Compile Include="ReleaseNotes.fs" />
     <Compile Include="Github.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="4.7.2" />
-    <PackageReference Include="Fake.Core.Target" Version="5.20.3" />
-    <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.20.3" />
-    <PackageReference Include="Fake.IO.FileSystem" Version="5.20.3" />
-    <PackageReference Include="Fake.Tools.Git" Version="5.20.3" />
-    <PackageReference Include="Fake.DotNet.AssemblyInfoFile" Version="5.20.3" />
-    <PackageReference Include="Fake.IO.Zip" Version="5.20.3" />
-    <PackageReference Include="Fake.Api.GitHub" Version="5.20.3" />
+    <PackageReference Include="FSharp.Core" Version="6.0.5" />
+    <PackageReference Include="Fake.Core.Target" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.IO.FileSystem" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.Tools.Git" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.DotNet.AssemblyInfoFile" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.IO.Zip" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.Api.GitHub" Version="5.23.0-alpha002" />
   </ItemGroup>
 
   <PropertyGroup>
