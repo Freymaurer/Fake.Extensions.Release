@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="GithubDraft.Test.fs" />
     <Compile Include="ReleaseNotes.Test.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="MessagePrompts.fs" />
@@ -28,6 +29,7 @@
     <PackageReference Include="Fake.DotNet.MSBuild" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.IO.FileSystem" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.Tools.Git" Version="5.23.0-alpha002" />
+	<PackageReference Include="Fake.IO.Zip" Version="5.23.0-alpha002" />
   </ItemGroup>
 
   <ItemGroup>
