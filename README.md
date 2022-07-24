@@ -1,62 +1,30 @@
-# Fake.Extensions.Release
+﻿# Fake.Extensions.Release
 
 A libary for extended release notes functions using FAKE.
 
-- [Fake.Extensions.Release](#fakeextensionsrelease)
-  - [Install/Use](#installuse)
-  - [Example build.fsx module](#example-buildfsx-module)
-  - [API](#api)
-    - [ReleaseNotes.FAKE.AssemblyVersion.create](#releasenotesfakeassemblyversioncreate)
-    - [ReleaseNotes.FAKE.Release.exists](#releasenotesfakereleaseexists)
-    - [ReleaseNotes.FAKE.Release.update](#releasenotesfakereleaseupdate)
-    - [ReleaseNotes.FAKE.Github.draft](#releasenotesfakegithubdraft)
-    - [Release Notes in Nuget](#release-notes-in-nuget)
+- [Install/Use](#installuse)
+- [Example build.fsx module](#example-buildfsx-module)
+- [API](#api)
+- [ReleaseNotes.FAKE.AssemblyVersion.create](#releasenotesfakeassemblyversioncreate)
+- [ReleaseNotes.FAKE.Release.ensure](#releasenotesfakereleaseensure)
+- [ReleaseNotes.FAKE.Release.update](#releasenotesfakereleaseupdate)
+- [ReleaseNotes.FAKE.Github.draft](#releasenotesfakegithubdraft)
+- [Release Notes in Nuget](#release-notes-in-nuget)
 
 ## Install/Use
 
 ### Dependency
-This library uses [git](https://git-scm.com/downloads) to access your commit history. For me it worked with `2.32.0`. Please open an issue in case you get problems.
+This library requires [git](https://git-scm.com/downloads) to access your commit history.
 
-The following shows an example dependency reference part for a build.fsx.
-Note: `nuget Fake.Extensions.Release`
+| Package Name         | Nuget                                                                                                                |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `Fake.Extensions.Release`           | [![NuGet Badge](https://buildstats.info/nuget/Fake.Extensions.Release)](https://www.nuget.org/packages/Fake.Extensions.Release/)                    |
 
-```fsharp
-#r "paket:
-nuget BlackFox.Fake.BuildTask
-nuget Fake.Extensions.Release
-nuget Fake.Core.Target
-nuget Fake.Core.Process
-nuget Fake.Core.ReleaseNotes
-nuget Fake.IO.FileSystem
-nuget Fake.DotNet.Cli
-nuget Fake.DotNet.MSBuild
-nuget Fake.DotNet.AssemblyInfoFile
-nuget Fake.DotNet.Paket
-nuget Fake.DotNet.FSFormatting
-nuget Fake.DotNet.Fsi
-nuget Fake.DotNet.NuGet
-nuget Fake.Api.Github
-nuget Fake.DotNet.Testing.Expecto 
-nuget Fake.Tools.Git //"
-
-#if !FAKE
-#load "./.fake/build.fsx/intellisense.fsx"
-#r "netstandard" // Temp fix for https://github.com/dotnet/fsharp/issues/5216
-#endif
-
-open Fake.Extensions.Release
-```
-
-Should you not be able to use `open Fake.Extensions.Release` try the following:
-- if using local tools `dotnet fake run build.fsx` else `fake run build.fsx` in the same directory as your `build.fsx`
-- delete `build.fsx.lock` and `.fake` directory in the same directory as your `build.fsx` then try the step above again.
 
 ## Example build.fsx module
 
-You can add the following to your build.fsx.
-
 While testing i ran into some erros that you might also encounter:
-- When using BlackFox.Fake.BuildTask make sure to reference `BuildTask.runOrDefaultWithArguments defaultTask` at the bottom of .fsx. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. This is necessary as the several `Fake.Extensions.Release` targets take additional parameters. 
+- When using BlackFox.Fake.BuildTask make sure to use `BuildTask.runOrDefaultWithArguments defaultTask`. When running standard Fake reference `Target.runOrDefaultWithArguments defaultTarget`. 
 
 ```fsharp
 module ProjectInfo =
@@ -116,7 +84,7 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyMetadata_ReleaseDate = "08/02/2021"
 ```
 
-### Release.exists 
+### Release.ensure 
 
 This functions checks if RELEASE_NOTES.md exists on the same directory level and if not creates it with the following content.
 
@@ -128,34 +96,44 @@ This functions checks if RELEASE_NOTES.md exists on the same directory level and
 
 ### Release.update
 
-This is the core function of this repo. It takes optional parameters:
-- semver:patch -> increases 0.0.X
-- semver:minor -> increases 0.X.0
-- semver:major -> increases X.0.0
+It takes optional parameters:
 
-in the form of `dotnet fake build -t ReleaseNotes semver:minor`. The function will check all git commits since the last one used and add them to the RELEASE_NOTES.md. If no additonal param is given (`dotnet fake build -t ReleaseNotes`) then the latest commits are added to the last version increase. If a optional param is given the version is increased and all not-yet-added commits are added to the new version.
+**Next SemVer:**
+- `semver:pre-any-string` → adds pre-release 0.0.0-any-string
+  - Example: `semver:pre-alpha.01` → `0.0.0-alpha.01`
+- `semver:patch` → increases 0.0.X
+- `semver:minor` → increases 0.X.0
+- `semver:major` → increases X.0.0
+
+**Crawled last commits:**
+- `n:integer` → Crawl last `integer` commits for last used commit. Default 30.
+  - Example: `n:50` → Crawl last 50 commits.
+
+The function will check all git commits since the last one used, and add them to the RELEASE_NOTES.md. If no additonal param is given then the latest commits are added to the latest release notes. If a optional param is given the version is increased and all not-yet-added commits are added to the new version.
 In all cases the latest commit is added both as additional info to SemVer and as the first entry in the RELEASE_NOTES.md. 
 
-> Due to a bug in FAKE.Core.ReleasNotes SemVer is not correctly parsed. Due to this we need to store the latest commit not only as additional info in SemVer but also as an entry.
-
-Here are the current RELEASE_NOTES.md for this repo.
+Here is an example from this repository.
 ```md
-### 0.1.0+75e3342 (Released 2021-2-5)
+### 0.3.0+83f3e48 (Released 2022-7-25)
 * Additions:
-    * latest commit #75e3342
-    * [[#75e3342](https://github.com/Freymaurer/Fake.Extensions.Release/commit/75e3342607582c42df597e1a292707fe05746ec5)] Self reference in build.fsx and create RELEASE_NOTES.md
-    * [[#7979ee3](https://github.com/Freymaurer/Fake.Extensions.Release/commit/7979ee39192e239c5cabd083fe7f871e42d43c2a)] Initial commit :tada:
-    * [[#d76e3ce](https://github.com/Freymaurer/Fake.Extensions.Release/commit/d76e3ce5b94a1acadd54881042cb605f072df1cb)] Repo name change and basic functionality added
+    * [[#ded1898](https://github.com/Freymaurer/Fake.Extensions.Release/commit/ded1898269a42af82c20faca79ac82528e10a5d0)] Add build.fsproj
+    * [[#1dcc57b](https://github.com/Freymaurer/Fake.Extensions.Release/commit/1dcc57b78341e6fa452fad0b7b236af558fd0c9c)] Add unit tests :white_check_mark:
+    * [[#e5823b3](https://github.com/Freymaurer/Fake.Extensions.Release/commit/e5823b347ab4a9ddad970d305abe79cb857e2234)] Update ReleasNote parsing with now correct SemVer :sparkles:
+    * [[#23e6880](https://github.com/Freymaurer/Fake.Extensions.Release/commit/23e688001553162d8c21df85a12847cd706e640b)] Update README.md
+    * [[#cc6d9ad](https://github.com/Freymaurer/Fake.Extensions.Release/commit/cc6d9ad66b6f6c9861ad3601396822283991e331)] Update README.md
+* Deletions:
+    * [[#83f3e48](https://github.com/Freymaurer/Fake.Extensions.Release/commit/83f3e487a03a2a7be75350e3a3c5a025171c2040)] Remove build.fsx logic
+
+### 0.2.0+b0216ab (Released 2021-2-8)
+* Additions:
+    * latest commit #b0216ab // This was added due to a bug in Fake.ReleaseNotes, which is now fixed
+    * [[#b0216ab](https://github.com/Freymaurer/Fake.Extensions.Release/commit/b0216abe97c2ac841cd40b6ee260790022c7e2e1)] Update README.md :books:
+    * [[#55dc4b9](https://github.com/Freymaurer/Fake.Extensions.Release/commit/55dc4b9ba64eaf676809436f0e69f4a9106fa729)] Change library namespace (Issue #1).
 * Bugfixes:
-    * [[#dcdb4ad](https://github.com/Freymaurer/Fake.Extensions.Release/commit/dcdb4ad8d5624a44eeb9f5a42ed0bf628fa5e1e0)] Fix naming errors
-    * [[#04d1508](https://github.com/Freymaurer/Fake.Extensions.Release/commit/04d15086c1de5bde9650b15d081294617e78bddc)] Fix reference issues
+    * [[#819179e](https://github.com/Freymaurer/Fake.Extensions.Release/commit/819179eeb712cfbd2ebbecb6ad33fb35e371d085)] Fix nuget package release notes.
+    * [[#9598d25](https://github.com/Freymaurer/Fake.Extensions.Release/commit/9598d25f00a4876e789a1e8d05919014feca3b03)] Fix hardcoded commit url (Issue #2).
 
-### 0.0.0 (Released 2021-2-5)
-* Additions:
-    * Initial set up for RELEASE_Notes.md
 ```
-
-This function needs certain keywords to correctly function. If the `latest commit #xxxxxx` is removed all found commits will be added to the newest release. Should a commit hash not exist in the last x commits the function will error.
 
 ### Github.draft
 
