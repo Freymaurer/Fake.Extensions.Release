@@ -136,7 +136,6 @@ module ReleaseNotes =
                 |> List.choose (fun x -> 
                     if x.IsSome && fst x.Value = descriptor then Some (snd x.Value) else None
                 )
-                |> List.map (fun x -> sprintf "    * %s" x)
             let prevAdditions = findCommitsByDescriptor Additions addedDescriptors
             let prevDeletions = findCommitsByDescriptor Deletions addedDescriptors
             let prevBugs = findCommitsByDescriptor Bugfixes addedDescriptors
