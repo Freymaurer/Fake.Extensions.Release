@@ -5,10 +5,10 @@ A libary for extended release notes functions using FAKE.
 - [Install/Use](#installuse)
 - [Example build.fsx module](#example-buildfsx-module)
 - [API](#api)
-- [ReleaseNotes.FAKE.AssemblyVersion.create](#releasenotesfakeassemblyversioncreate)
-- [ReleaseNotes.FAKE.Release.ensure](#releasenotesfakereleaseensure)
-- [ReleaseNotes.FAKE.Release.update](#releasenotesfakereleaseupdate)
-- [ReleaseNotes.FAKE.Github.draft](#releasenotesfakegithubdraft)
+  - [ReleaseNotes.FAKE.AssemblyVersion.create](#releasenotesfakeassemblyversioncreate)
+  - [ReleaseNotes.FAKE.Release.ensure](#releasenotesfakereleaseensure)
+  - [ReleaseNotes.FAKE.Release.update](#releasenotesfakereleaseupdate)
+  - [ReleaseNotes.FAKE.Github.draft](#releasenotesfakegithubdraft)
 - [Release Notes in Nuget](#release-notes-in-nuget)
 
 ## Install/Use
@@ -146,7 +146,7 @@ This will create a github release draft with the latest release notes and a cust
 
 ![Github release draft exmp](docs/img/draft_exmp.png)
 
-### Release Notes in Nuget
+## Release Notes in Nuget
 
 Should you use the generated RELEASE_NOTES.md to populate your nuget release notes you migth want to remove the commit urls as nuget does not parse markdown.
 
