@@ -1,3 +1,15 @@
+### 0.3.0+1220a0e (Released 2022-7-25)
+* Additions:
+    * [[#3f203b4](https://github.com/Freymaurer/Fake.Extensions.Release/commit/3f203b466bf645f6edc2759525eca3c66b92b4be)] Update README.md :books:
+    * [[#ded1898](https://github.com/Freymaurer/Fake.Extensions.Release/commit/ded1898269a42af82c20faca79ac82528e10a5d0)] Add build.fsproj
+    * [[#1dcc57b](https://github.com/Freymaurer/Fake.Extensions.Release/commit/1dcc57b78341e6fa452fad0b7b236af558fd0c9c)] Add unit tests :white_check_mark:
+    * [[#e5823b3](https://github.com/Freymaurer/Fake.Extensions.Release/commit/e5823b347ab4a9ddad970d305abe79cb857e2234)] Update ReleasNote parsing with now correct SemVer :sparkles:
+* Deletions:
+    * [[#83f3e48](https://github.com/Freymaurer/Fake.Extensions.Release/commit/83f3e487a03a2a7be75350e3a3c5a025171c2040)] Remove build.fsx logic
+* Bugfixes:
+    * [[#1220a0e](https://github.com/Freymaurer/Fake.Extensions.Release/commit/1220a0ec8bee4dcb3f80fa58c73324d8bcd48be8)] Bugfix wrong duplicate of list md element on WIP update :bug:
+    * [[#6859555](https://github.com/Freymaurer/Fake.Extensions.Release/commit/6859555e1d664381ee89a4896a9654a3f102201b)] Minor bugfixes :bugs:
+
 ### 0.2.0+b0216ab (Released 2021-2-8)
 * Additions:
     * latest commit #b0216ab
@@ -21,3 +33,4 @@
 ### 0.0.0 (Released 2021-2-5)
 * Additions:
     * Initial set up for RELEASE_Notes.md
+
