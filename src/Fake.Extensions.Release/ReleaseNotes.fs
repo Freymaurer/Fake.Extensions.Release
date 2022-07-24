@@ -8,6 +8,7 @@ module Release =
 
     let x = 0
 
+
 module ReleaseNotes =
     
     /// This module contains helper functions. These are only visible to allow for detailed unit tests.
@@ -62,6 +63,7 @@ module ReleaseNotes =
                 [
                     sprintf "### %s (Released %s)" (SemVerInfo.toSemVer this.SemVer) (this.Date |> Option.defaultValue System.DateTime.Now |> createDateString)
                     yield! this.Notes
+                    ""
                 ]
 
             static member initReleaseNotes() =
@@ -106,8 +108,8 @@ module ReleaseNotes =
         let rec sortCommitsByKeyWords (all:string list) (additions:string list) (deletions:string list) (bugs:string list) =
             let bugKeyWords = [|"bug"; "problem"; "fix"|] |> Array.map String.toLower
             let deleteKeyWords = [|"delete"; "remove"; "cut"|] |> Array.map String.toLower
-            let isHeadBugKeyWord (head:string) = Array.exists (fun x -> head.ToLower().Contains x) bugKeyWords
-            let isHeadDeleteKeyWord (head:string) = Array.exists (fun x -> head.ToLower().Contains x) deleteKeyWords
+            let isHeadBugKeyWord (head:string) = Array.exists (fun (x: string) -> head.ToLower().Contains x) bugKeyWords
+            let isHeadDeleteKeyWord (head:string) = Array.exists (fun (x: string)  -> head.ToLower().Contains x) deleteKeyWords
             match all with
             | head::rest when isHeadBugKeyWord head
                     -> sortCommitsByKeyWords rest additions deletions (head::bugs)
@@ -165,14 +167,16 @@ module ReleaseNotes =
     open Aux
     
     /// Checks if RELEASE_NOTES.md exists and if not creates it.
+    /// 'folder' is the path containing the README.md
     let ensure() =
-        let isExisting = Fake.IO.File.exists "RELEASE_NOTES.md"
+        let releaseNotesPath = "RELEASE_NOTES.md"
+        let isExisting = Fake.IO.File.exists releaseNotesPath
         if isExisting = false then
             let newReleaseNotes = ReleaseNotes.ReleaseNotes.initReleaseNotes().ComposeNotes()
-            Fake.IO.File.create "RELEASE_NOTES.md"
+            Fake.IO.File.create releaseNotesPath
             Fake.IO.File.write
                 true
-                "RELEASE_NOTES.md"
+                releaseNotesPath
                 newReleaseNotes
             Trace.traceImportant "RELEASE_Notes.md created"
         else
@@ -199,7 +203,13 @@ module ReleaseNotes =
             else 
                 all.Head, all.Tail
 
-        let lastCommitHash = if lastReleaseNotes.SemVer.BuildMetaData <> "" then Some <| "#" + lastReleaseNotes.SemVer.BuildMetaData else None
+        //Trace.tracef "%A" prevReleaseNotes.Head.Notes
+
+        let lastCommitHash = if lastReleaseNotes.SemVer.BuildMetaData <> "" then Some <| lastReleaseNotes.SemVer.BuildMetaData else None
+
+        match lastCommitHash with
+        | Some hash -> Trace.tracef "Found last commit '%s'.%A" hash System.Environment.NewLine
+        | None -> Trace.tracef "No last commit found. Add the last (if existing) '%s' commits." nOfLastCommitsToCheck
 
         //https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History#pretty_format
         let (_,gitCommits,_) = Fake.Tools.Git.CommandHelper.runGitCommand "" ("log -" + nOfLastCommitsToCheck + " --pretty=format:\"%H;%h;%s\"")
@@ -219,8 +229,6 @@ module ReleaseNotes =
             else
                 gitCommits
 
-        Trace.trace "Updating RELEASE_NOTES.md ..."
-
         let writeNewReleaseNotes =
 
             let semVer = matchSemVerArg config.Context.Arguments
@@ -232,41 +240,42 @@ module ReleaseNotes =
                 elif lastCommitHash.IsSome then lastCommitHash.Value 
                 // if all fails then empty
                 else ""
-            let newSemVer = updateSemVer semVer latestCommitHash.[1..] lastReleaseNotes.SemVer
+            let newSemVer = updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
             /// This will be used to directly create the release notes
             let formattedCommitNoteList =
                 commitNoteArr
                 // filter out unimportant commits
-                |> Array.filter (fun x ->
-                    match x.[2].ToLower().Contains with
+                |> Array.filter (fun (x: string []) ->
+                    let (lineContains: string -> bool) = x.[2].ToLower().Contains
+                    match lineContains with
                     | x when x "update release_notes.md" || x "update release notes" -> false
                     | _ -> true
                 )
                 |> Array.map (fun x ->
-                    sprintf "    * [[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
+                    sprintf "[[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
                 )
                 |> List.ofArray
 
             let additions, deletions, bugs =
                 let additions, deletions, bugs = sortCommitsByKeyWords formattedCommitNoteList [] [] []
-                if semVer <> WIP then
+                if semVer <> WIP then   
                     additions, deletions, bugs
                 else
                     let prevAdditions, prevDeletions, prevBugs =
-                            splitPreviousReleaseNotes lastReleaseNotes.Notes
+                        splitPreviousReleaseNotes lastReleaseNotes.Notes
                     additions@prevAdditions,deletions@prevDeletions,bugs@prevBugs
 
             let newNotes =
                 ReleaseNotes.ReleaseNotes.New(newSemVer.ToSemVer(),newSemVer.ToSemVer(),Some DateTime.Now, 
                     [
                         if List.isEmpty additions |> not then
-                            "* Additions:"; 
+                            "Additions:"; 
                             yield! additions; 
                         if List.isEmpty deletions |> not then
-                            "* Deletions:"
+                            "Deletions:"
                             yield! deletions
                         if List.isEmpty bugs |> not then
-                            "* Bugfixes:"
+                            "Bugfixes:"
                             yield! bugs
                     ]
                 ).ComposeNotes()
@@ -274,7 +283,22 @@ module ReleaseNotes =
             /// add previous notes to new updated notes
             let allUpdatedNotes = 
                 prevReleaseNotes |> List.collect (fun x -> x.ComposeNotes())
-                |> fun prev -> newNotes@prev
+                |> fun prev -> 
+                    if semVer <> WIP then   
+                        newNotes@(lastReleaseNotes.ComposeNotes())@prev
+                    else
+                        newNotes@prev
+                // ReleaseNotes.parseAll trims "*" and " " from lines, thereby removes list md
+                // Apply list style to release notes.
+                |> List.map (fun line ->
+                    match line with
+                    | "Additions:" -> "* Additions:"
+                    | "Deletions:" -> "* Deletions:"
+                    | "Bugfixes:" -> "* Bugfixes:"
+                    | header when line.StartsWith "##" -> header
+                    | "" -> ""
+                    | anyElse -> "    * " + anyElse
+                )
 
             Fake.IO.File.write
                 false
@@ -282,4 +306,3 @@ module ReleaseNotes =
                 allUpdatedNotes
 
         Trace.trace "Update RELEASE_NOTES.md done!"
-        

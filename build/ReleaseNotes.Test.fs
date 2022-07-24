@@ -61,6 +61,7 @@ module ReleaseNotes =
                 [
                     sprintf "### %s (Released %s)" (SemVerInfo.toSemVer this.SemVer) (this.Date |> Option.defaultValue System.DateTime.Now |> createDateString)
                     yield! this.Notes
+                    ""
                 ]
 
             static member initReleaseNotes() =
@@ -200,10 +201,12 @@ module ReleaseNotes =
             else 
                 all.Head, all.Tail
 
+        //Trace.tracef "%A" prevReleaseNotes.Head.Notes
+
         let lastCommitHash = if lastReleaseNotes.SemVer.BuildMetaData <> "" then Some <| lastReleaseNotes.SemVer.BuildMetaData else None
 
         match lastCommitHash with
-        | Some hash -> Trace.tracef "Found last commit '%s'." hash
+        | Some hash -> Trace.tracef "Found last commit '%s'.%A" hash System.Environment.NewLine
         | None -> Trace.tracef "No last commit found. Add the last (if existing) '%s' commits." nOfLastCommitsToCheck
 
         //https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History#pretty_format
@@ -223,8 +226,6 @@ module ReleaseNotes =
                 |> List.take (tryFindLastCommitIndex.Value)
             else
                 gitCommits
-
-        Trace.trace "Updating RELEASE_NOTES.md ..."
 
         let writeNewReleaseNotes =
 
@@ -249,30 +250,30 @@ module ReleaseNotes =
                     | _ -> true
                 )
                 |> Array.map (fun x ->
-                    sprintf "    * [[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
+                    sprintf "[[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
                 )
                 |> List.ofArray
 
             let additions, deletions, bugs =
                 let additions, deletions, bugs = sortCommitsByKeyWords formattedCommitNoteList [] [] []
-                if semVer <> WIP then
+                if semVer <> WIP then   
                     additions, deletions, bugs
                 else
                     let prevAdditions, prevDeletions, prevBugs =
-                            splitPreviousReleaseNotes lastReleaseNotes.Notes
+                        splitPreviousReleaseNotes lastReleaseNotes.Notes
                     additions@prevAdditions,deletions@prevDeletions,bugs@prevBugs
 
             let newNotes =
                 ReleaseNotes.ReleaseNotes.New(newSemVer.ToSemVer(),newSemVer.ToSemVer(),Some DateTime.Now, 
                     [
                         if List.isEmpty additions |> not then
-                            "* Additions:"; 
+                            "Additions:"; 
                             yield! additions; 
                         if List.isEmpty deletions |> not then
-                            "* Deletions:"
+                            "Deletions:"
                             yield! deletions
                         if List.isEmpty bugs |> not then
-                            "* Bugfixes:"
+                            "Bugfixes:"
                             yield! bugs
                     ]
                 ).ComposeNotes()
@@ -280,7 +281,22 @@ module ReleaseNotes =
             /// add previous notes to new updated notes
             let allUpdatedNotes = 
                 prevReleaseNotes |> List.collect (fun x -> x.ComposeNotes())
-                |> fun prev -> newNotes@prev
+                |> fun prev -> 
+                    if semVer <> WIP then   
+                        newNotes@(lastReleaseNotes.ComposeNotes())@prev
+                    else
+                        newNotes@prev
+                // ReleaseNotes.parseAll trims "*" and " " from lines, thereby removes list md
+                // Apply list style to release notes.
+                |> List.map (fun line ->
+                    match line with
+                    | "Additions:" -> "* Additions:"
+                    | "Deletions:" -> "* Deletions:"
+                    | "Bugfixes:" -> "* Bugfixes:"
+                    | header when line.StartsWith "##" -> header
+                    | "" -> ""
+                    | anyElse -> "    * " + anyElse
+                )
 
             Fake.IO.File.write
                 false

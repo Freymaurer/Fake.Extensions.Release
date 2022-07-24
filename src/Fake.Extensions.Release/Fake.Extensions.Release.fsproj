@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
     <PackageReference Include="Fake.Core.Target" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.IO.FileSystem" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.Tools.Git" Version="5.23.0-alpha002" />
+	<PackageReference Include="Fake.Tools.Git" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.DotNet.AssemblyInfoFile" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.IO.Zip" Version="5.23.0-alpha002" />
     <PackageReference Include="Fake.Api.GitHub" Version="5.23.0-alpha002" />

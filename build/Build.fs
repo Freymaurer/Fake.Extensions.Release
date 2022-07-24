@@ -41,9 +41,11 @@ let _preRelease =
 //        "PreReleaseNoDocs" 
 //        [setPrereleaseTag; clean; build; runTests; packPrerelease; createPrereleaseTag; publishNugetPrerelease]
 
-let createTag = BuildTask.create "releasenotes" [] {
+let createTag = BuildTask.createFn "releasenotes" [] (fun target ->
     ReleaseNotes.ReleaseNotes.ensure()
-}
+    ReleaseNotes.ReleaseNotes.update(ProjectInfo.gitOwner, ProjectInfo.project, target)
+)
+
 
 
 
