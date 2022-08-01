@@ -43,9 +43,9 @@ module ReleaseNoteTasks =
     }
 
     let updateReleaseNotes = BuildTask.createFn "ReleaseNotes" [] (fun config ->
-        Release.exists()
+        ReleaseNotes.ensure()
 
-        Release.update(ProjectInfo.gitOwner, ProjectInfo.gitName, config)
+        ReleaseNotes.update(ProjectInfo.gitOwner, ProjectInfo.gitName, config)
     )
 
     let githubDraft = BuildTask.createFn "GithubDraft" [] (fun config ->
