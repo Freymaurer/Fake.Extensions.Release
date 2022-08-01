@@ -15,6 +15,7 @@ open Fake.Tools
 open Fake.IO
 open Fake.IO.Globbing.Operators
 
+
 let createTag = BuildTask.create "CreateTag" [clean; build; runTests; pack] {
     if promptYesNo (sprintf "tagging branch with %s OK?" stableVersionTag ) then
         Git.Branches.tag "" stableVersionTag
