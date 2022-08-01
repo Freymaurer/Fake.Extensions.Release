@@ -1,3 +1,9 @@
+### 0.3.1+03014d9 (Released 2022-8-1)
+* Additions:
+    * [[#9b78251](https://github.com/Freymaurer/Fake.Extensions.Release/commit/9b78251bb6274e5db76e57fa2c2992705c2377db)] Add github draft test fs to build.fsproj
+    * [[#318fd87](https://github.com/Freymaurer/Fake.Extensions.Release/commit/318fd87d76052cfe87e4785b3e5eb9c18566e4d1)] Update README.md :books:
+    * [[#03014d9](https://github.com/Freymaurer/Fake.Extensions.Release/commit/03014d921ad3f2a2ae13a55573a1e8bdf3fd380a)] Increase release notes parsing transparency.
+
 ### 0.3.0+1220a0e (Released 2022-7-25)
 * Additions:
     * [[#3f203b4](https://github.com/Freymaurer/Fake.Extensions.Release/commit/3f203b466bf645f6edc2759525eca3c66b92b4be)] Update README.md :books:
