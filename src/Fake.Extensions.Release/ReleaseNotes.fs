@@ -202,7 +202,7 @@ module ReleaseNotes =
             else 
                 all.Head, all.Tail
 
-        //Trace.tracef "%A" prevReleaseNotes.Head.Notes
+        Trace.tracefn "Found latest release notes (%A, from %A)" lastReleaseNotes.SemVer.Original lastReleaseNotes.Date
 
         let lastCommitHash = if lastReleaseNotes.SemVer.BuildMetaData <> "" then Some <| lastReleaseNotes.SemVer.BuildMetaData else None
 

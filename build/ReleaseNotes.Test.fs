@@ -200,13 +200,13 @@ module ReleaseNotes =
             else 
                 all.Head, all.Tail
 
-        //Trace.tracef "%A" prevReleaseNotes.Head.Notes
+        Trace.tracefn "Found latest release notes (%A, from %A)" lastReleaseNotes.SemVer.Original lastReleaseNotes.Date
 
         let lastCommitHash = if lastReleaseNotes.SemVer.BuildMetaData <> "" then Some <| lastReleaseNotes.SemVer.BuildMetaData else None
 
         match lastCommitHash with
-        | Some hash -> Trace.tracef "Found last commit '%s'.%A" hash System.Environment.NewLine
-        | None -> Trace.tracef "No last commit found. Add the last (if existing) '%s' commits." nOfLastCommitsToCheck
+        | Some hash -> Trace.tracefn "Found last commit '%s'. %A." hash System.Environment.NewLine
+        | None -> Trace.tracefn "No last commit found. Add the last (if existing) '%s' commits." nOfLastCommitsToCheck
 
         //https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History#pretty_format
         let (_,gitCommits,_) = Fake.Tools.Git.CommandHelper.runGitCommand "" ("log -" + nOfLastCommitsToCheck + " --pretty=format:\"%H;%h;%s\"")
