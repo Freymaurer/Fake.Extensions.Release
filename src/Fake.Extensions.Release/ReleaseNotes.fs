@@ -2,6 +2,7 @@
 
 open Fake.Core
 open System
+open System.Text.RegularExpressions
 
 [<Obsolete("Changed naming to 'ReleaseNotes'")>]
 module Release =
@@ -242,12 +243,14 @@ module ReleaseNotes =
             let newSemVer = updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
             /// This will be used to directly create the release notes
             let formattedCommitNoteList =
+                let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes(\.md)?$"
                 commitNoteArr
                 // filter out unimportant commits
                 |> Array.filter (fun (x: string []) ->
-                    let (lineContains: string -> bool) = x.[2].ToLower().Contains
-                    match lineContains with
-                    | x when x "update release_notes.md" || x "update release notes" -> false
+                    let line = x.[2].ToLower()
+                    match line with
+                    | y when (releaseNotesPattern.Match y).Success -> false
+                    | y when y.Contains "merge pull request" -> false
                     | _ -> true
                 )
                 |> Array.map (fun x ->
