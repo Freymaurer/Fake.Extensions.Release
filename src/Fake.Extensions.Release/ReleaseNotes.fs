@@ -243,7 +243,8 @@ module ReleaseNotes =
             let newSemVer = updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
             /// This will be used to directly create the release notes
             let formattedCommitNoteList =
-                let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes(\.md)?$"
+                // matches: "update(or)bump release_(or)-(or) notes(followed by anything)"
+                let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes(.*)?$"
                 commitNoteArr
                 // filter out unimportant commits
                 |> Array.filter (fun (x: string []) ->
