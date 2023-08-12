@@ -26,5 +26,7 @@ let clean = BuildTask.create "Clean" [] {
 
 let build = BuildTask.create "Build" [clean] {
     solutionFile
-    |> DotNet.build id
+    |> DotNet.build (fun i -> 
+        { i with MSBuildParams = { i.MSBuildParams with DisableInternalBinLog = true} }
+    )
 }
