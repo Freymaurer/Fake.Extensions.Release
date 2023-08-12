@@ -1,3 +1,17 @@
+### 0.4.0+6f54272 (Released 2023-8-12)
+* Additions:
+    * [[#b4f4a6f](https://github.com/Freymaurer/Fake.Extensions.Release/commit/b4f4a6fc22c5e918a3d2f45e67fd9e20a12a6cfb)] Add nuget package commit link removal.
+    * [[#626265c](https://github.com/Freymaurer/Fake.Extensions.Release/commit/626265c22ee0862a52ebf814d131dfd1137e22d3)] Update README.md
+    * [[#968c7d5](https://github.com/Freymaurer/Fake.Extensions.Release/commit/968c7d53e6eb38cf67038a26f8e4403a84b11b3d)] Add patterns to match PR merge commits & RN bumps
+    * [[#2b59f84](https://github.com/Freymaurer/Fake.Extensions.Release/commit/2b59f8423783574a47e3e6dc7a4bc6108e74aea8)] Add description to Regex pattern
+    * [[#3f2fc67](https://github.com/Freymaurer/Fake.Extensions.Release/commit/3f2fc67087ba552d8cef0eeec22490316d9c28ce)] Add playground script to test stuff
+    * [[#c9c7ee8](https://github.com/Freymaurer/Fake.Extensions.Release/commit/c9c7ee8826633df41d64c1cf14997baa76bb5794)] Exclude filter function to `Aux`
+    * [[#13c49c2](https://github.com/Freymaurer/Fake.Extensions.Release/commit/13c49c2461b65932a425b1f18edecb32d9a28a44)] Add unit tests
+    * [[#2a0b61e](https://github.com/Freymaurer/Fake.Extensions.Release/commit/2a0b61ee513a4e7029cba0cabc6cb289b46d7240)] Merge pull request #5 from omaus/feature-mergeAndBumps-#4
+    * [[#6f54272](https://github.com/Freymaurer/Fake.Extensions.Release/commit/6f54272e6ad5e8638a12395ce9bbea98de9dbe86)] Update dependencies
+* Bugfixes:
+    * [[#145bcfb](https://github.com/Freymaurer/Fake.Extensions.Release/commit/145bcfba5b937d6f56df0dc5097c909ccca28abd)] Fix typo
+
 ### 0.3.1+03014d9 (Released 2022-8-1)
 * Additions:
     * [[#9b78251](https://github.com/Freymaurer/Fake.Extensions.Release/commit/9b78251bb6274e5db76e57fa2c2992705c2377db)] Add github draft test fs to build.fsproj
