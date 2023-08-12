@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7246FAC5-EF00-4626-96E0-A16702407630}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.cmd = build.cmd
 		build.fsx = build.fsx
 		build.sh = build.sh
+		playground.fsx = playground.fsx
 		README.md = README.md
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
@@ -17,7 +18,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Fake.Extensions.Release", "
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Fake.Extensions.Release.Tests", "tests\Fake.Extensions.Release.Tests\Fake.Extensions.Release.Tests.fsproj", "{2A5D96F8-9387-4130-BBFD-01298DE956E0}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "build", "build\build.fsproj", "{6A11913A-3BF2-462B-862D-F2312668DCB1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "build", "build\build.fsproj", "{6A11913A-3BF2-462B-862D-F2312668DCB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
