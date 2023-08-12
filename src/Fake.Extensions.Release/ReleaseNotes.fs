@@ -2,6 +2,7 @@
 
 open Fake.Core
 open System
+open System.Text.RegularExpressions
 
 [<Obsolete("Changed naming to 'ReleaseNotes'")>]
 module Release =
@@ -162,6 +163,21 @@ module ReleaseNotes =
             | None | Some "semver:wip" ->
                 Trace.trace "Add new commits to current release."
                 WIP
+
+        /// Takes an array of commit notes and filters out commits deemed unnecessary. These are: Commits about updates of the Release Notes file; Pull-Request Merge commits.
+        let filterOutUnimportantCommits commitNoteArr =
+            printfn "%A" commitNoteArr
+            // matches: "update(or)bump release_(or)-(or) notes(followed by anything)"
+            //let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes(.*)?$"
+            let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes"
+            let mergePattern = Regex @"^merge.+(branch|pull request)"
+            commitNoteArr
+            |> Array.filter (fun (x: string []) ->
+                let line = x.[2].ToLower()
+                match line with
+                | y when (releaseNotesPattern.Match y).Success || (mergePattern.Match y).Success -> false
+                | _ -> true
+            )
     
     open Aux
     
@@ -242,14 +258,7 @@ module ReleaseNotes =
             let newSemVer = updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
             /// This will be used to directly create the release notes
             let formattedCommitNoteList =
-                commitNoteArr
-                // filter out unimportant commits
-                |> Array.filter (fun (x: string []) ->
-                    let (lineContains: string -> bool) = x.[2].ToLower().Contains
-                    match lineContains with
-                    | x when x "update release_notes.md" || x "update release notes" -> false
-                    | _ -> true
-                )
+                filterOutUnimportantCommits commitNoteArr
                 |> Array.map (fun x ->
                     sprintf "[[#%s](https://github.com/%s/%s/commit/%s)] %s" x.[1] owner repoName x.[0] x.[2]
                 )
