@@ -52,3 +52,30 @@ let tests_ReleaseNotes_Extensions =
             let newNotes = ReleaseNotes.ReleaseNotes.initReleaseNotes()
             Expect.equal (newNotes.SemVer.ToSemVer()) "0.0.0" "newNotes.SemVer.ToSemVer()"
     ]
+
+[<Tests>]
+let tests_filterOutUnimportantCommits =
+    testList "filterOutUnimportantCommits" [
+        let testCommits = [|
+            [|"2b59f8423783574a47e3e6dc7a4bc6108e74aea8"; "2b59f84"; "Add description to Regex pattern";|]
+            [|"968c7d53e6eb38cf67038a26f8e4403a84b11b3d"; "968c7d5"; "Add patterns to match PR merge commits & RN bumps";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Update README.md";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Update release notes";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Update release_notes";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Update release notes.md";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Bump release notes.md";|]
+            [|"b4f4a6fc22c5e918a3d2f45e67fd9e20a12a6cfb"; "b4f4a6f"; "Add nuget package commit link removal.";|]
+            [|"210575d5da41cd315d6bf0a38cc8b08b282c6cf7"; "210575d"; "Merge branch 'main' of https://github.com/Freymaurer/Fake.Extensions.Release";|]
+            [|"210575d5da41cd315d6bf0a38cc8b08b282c6cf7"; "210575d"; "Merge Pull Request #31 of ... to ...";|]
+            [|"458c87f0d1fb41ae999b156a713dfdfb2d9496fd"; "458c87f"; "Update RELEASE_NOTES.md"|]
+        |]
+        let testCommitsExpected = [|
+            [|"2b59f8423783574a47e3e6dc7a4bc6108e74aea8"; "2b59f84"; "Add description to Regex pattern";|]
+            [|"968c7d53e6eb38cf67038a26f8e4403a84b11b3d"; "968c7d5"; "Add patterns to match PR merge commits & RN bumps";|]
+            [|"626265c22ee0862a52ebf814d131dfd1137e22d3"; "626265c"; "Update README.md";|]
+            [|"b4f4a6fc22c5e918a3d2f45e67fd9e20a12a6cfb"; "b4f4a6f"; "Add nuget package commit link removal.";|]
+        |]
+        testCase "Test filterOutUnimportantCommits" <| fun _ ->
+            let result = filterOutUnimportantCommits testCommits
+            Expect.sequenceEqual result testCommitsExpected ""
+    ]
