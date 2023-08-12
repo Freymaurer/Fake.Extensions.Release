@@ -13,13 +13,13 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="6.0.5" />
-    <PackageReference Include="Fake.Core.Target" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.IO.FileSystem" Version="5.23.0-alpha002" />
-	<PackageReference Include="Fake.Tools.Git" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.DotNet.AssemblyInfoFile" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.IO.Zip" Version="5.23.0-alpha002" />
-    <PackageReference Include="Fake.Api.GitHub" Version="5.23.0-alpha002" />
+    <PackageReference Include="Fake.Core.Target" Version="5.23.1" />
+    <PackageReference Include="Fake.Core.ReleaseNotes" Version="5.23.1" />
+    <PackageReference Include="Fake.IO.FileSystem" Version="5.23.1" />
+	<PackageReference Include="Fake.Tools.Git" Version="5.23.1" />
+    <PackageReference Include="Fake.DotNet.AssemblyInfoFile" Version="5.23.1" />
+    <PackageReference Include="Fake.IO.Zip" Version="5.23.1" />
+    <PackageReference Include="Fake.Api.GitHub" Version="5.23.1" />
   </ItemGroup>
 
   <PropertyGroup>
