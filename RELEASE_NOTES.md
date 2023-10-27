@@ -1,3 +1,13 @@
+### 1.0.0+e689873 (Released 2023-10-27)
+* Additions:
+    * [[#e689873](https://github.com/Freymaurer/Fake.Extensions.Release/commit/e689873078afa111802c9367f9e8fe6670bd516d)] Update api docs :books:
+    * [[#5171e50](https://github.com/Freymaurer/Fake.Extensions.Release/commit/5171e503fa6d540b14d6d07d4bb5c7b2735d041e)] Merge pull request #9 from omaus/feature-preTag&Semver-#6
+    * [[#a42fb84](https://github.com/Freymaurer/Fake.Extensions.Release/commit/a42fb847b75082f3942784fc3b02ef3ed1a6e030)] Add match case for new prerelease command
+    * [[#6cae615](https://github.com/Freymaurer/Fake.Extensions.Release/commit/6cae61577ad32c3b85ba6f55083ae90f72e6c32f)] Update PR Regex pattern & unit tests
+* Bugfixes:
+    * [[#1e8fe61](https://github.com/Freymaurer/Fake.Extensions.Release/commit/1e8fe619252c77276f4ad2eff778bef9a2dd8393)] Merge pull request #8 from omaus/bug-prCommits-#7
+    * [[#6b666f8](https://github.com/Freymaurer/Fake.Extensions.Release/commit/6b666f81bbdbb591ea6495bd85972727563d5f4e)] Fix build issues
+
 ### 0.4.0+6f54272 (Released 2023-8-12)
 * Additions:
     * [[#b4f4a6f](https://github.com/Freymaurer/Fake.Extensions.Release/commit/b4f4a6fc22c5e918a3d2f45e67fd9e20a12a6cfb)] Add nuget package commit link removal.
