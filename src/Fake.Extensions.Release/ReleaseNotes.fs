@@ -142,11 +142,11 @@ module ReleaseNotes =
             let prevBugs = findCommitsByDescriptor Bugfixes addedDescriptors
             prevAdditions, prevDeletions, prevBugs
 
-        let matchSemVerArg (args0: string list) =
+        let matchSemVerArg (args0 : string list) =
             let args = args0 |> List.map (fun x -> x.ToLower().Trim()) 
-            let opt = args |> List.tryFind (fun x -> x.StartsWith "semver:")
-            match opt with
-            | Some "semver:major"->
+            let optSemVer = args |> List.tryFind (fun x -> x.StartsWith "semver:")
+            match optSemVer with
+            | Some "semver:major" ->
                 Trace.trace "Increase major for next release notes."
                 Major
             | Some "semver:minor" ->
@@ -155,14 +155,18 @@ module ReleaseNotes =
             | Some "semver:patch" ->
                 Trace.trace "Increase patch for next release notes."
                 Patch
-            | Some isPre when isPre.StartsWith "semver:pre-" -> 
-                Pre <| isPre.Replace("semver:pre-", "")
             | Some x ->
                 Trace.traceError (sprintf "Unrecognized argument: \"%s\". Default to \"semver:wip\"." x)
                 WIP
             | None | Some "semver:wip" ->
                 Trace.trace "Add new commits to current release."
                 WIP
+
+        let matchPreArg (args0 : string list) =
+            let args = args0 |> List.map (fun x -> x.ToLower().Trim()) 
+            let opt = args |> List.tryFind (fun x -> x.StartsWith "pre:")
+            opt
+            |> Option.map (fun s -> Pre <| s.Replace("pre:", ""))
 
         /// Takes an array of commit notes and filters out commits deemed unnecessary. These are: Commits about updates of the Release Notes file; Pull-Request Merge commits.
         let filterOutUnimportantCommits commitNoteArr =
@@ -244,9 +248,11 @@ module ReleaseNotes =
             else
                 gitCommits
 
+
         let writeNewReleaseNotes =
 
             let semVer = matchSemVerArg config.Context.Arguments
+            let semVerPre = matchPreArg config.Context.Arguments
             let commitNoteArr = newGitCommits |> Array.ofList |> Array.map (fun x -> x.Split([|";"|], StringSplitOptions.None))
             let latestCommitHash =
                 // try pick latest from commit array
@@ -255,7 +261,12 @@ module ReleaseNotes =
                 elif lastCommitHash.IsSome then lastCommitHash.Value 
                 // if all fails then empty
                 else ""
-            let newSemVer = updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
+            let newSemVer = 
+                match semVer, semVerPre with 
+                | _, None       -> updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
+                | WIP, Some pre -> updateSemVer pre latestCommitHash lastReleaseNotes.SemVer
+                | _, Some pre   -> updateSemVer semVer latestCommitHash lastReleaseNotes.SemVer
+                                   |> updateSemVer pre latestCommitHash
             /// This will be used to directly create the release notes
             let formattedCommitNoteList =
                 filterOutUnimportantCommits commitNoteArr
