@@ -68,6 +68,7 @@ let tests_filterOutUnimportantCommits =
             [|"210575d5da41cd315d6bf0a38cc8b08b282c6cf7"; "210575d"; "Merge branch 'main' of https://github.com/Freymaurer/Fake.Extensions.Release";|]
             [|"210575d5da41cd315d6bf0a38cc8b08b282c6cf7"; "210575d"; "Merge Pull Request #31 of ... to ...";|]
             [|"458c87f0d1fb41ae999b156a713dfdfb2d9496fd"; "458c87f"; "Update RELEASE_NOTES.md"|]
+            [|"210575d5da41cd315d6bf0a38cc8b08b282c6cf7"; "210575d"; "Merge PR #69 of ... to ...";|]
         |]
         let testCommitsExpected = [|
             [|"2b59f8423783574a47e3e6dc7a4bc6108e74aea8"; "2b59f84"; "Add description to Regex pattern";|]
