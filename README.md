@@ -99,11 +99,12 @@ This functions checks if RELEASE_NOTES.md exists on the same directory level and
 It takes optional parameters:
 
 **Next SemVer:**
-- `semver:pre-any-string` → adds pre-release 0.0.0-any-string
-  - Example: `semver:pre-alpha.01` → `0.0.0-alpha.01`
-- `semver:patch` → increases 0.0.X
-- `semver:minor` → increases 0.X.0
-- `semver:major` → increases X.0.0
+- 1.1.1 → `semver:patch` → increases 1.1.2
+- 1.1.1 → `semver:minor` → increases 1.2.0
+- 1.1.1 → `semver:major` → increases 2.0.0
+
+**Next Prerelease**
+- 1.1.1 → `pre:any.prerelease.youwant.01` → 1.1.1-any.prerelease.youwant.01
 
 **Crawled last commits:**
 - `n:integer` → Crawl last `integer` commits for last used commit. Default 30.
