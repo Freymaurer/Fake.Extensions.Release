@@ -170,7 +170,7 @@ module ReleaseNotes =
             // matches: "update(or)bump release_(or)-(or) notes(followed by anything)"
             //let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes(.*)?$"
             let releaseNotesPattern = Regex @"^(update|bump).+release[_\s-]?notes"
-            let mergePattern = Regex @"^merge.+(branch|pull request)"
+            let mergePattern = Regex @"^merge.+(branch|pull request|pr)"
             commitNoteArr
             |> Array.filter (fun (x: string []) ->
                 let line = x.[2].ToLower()
