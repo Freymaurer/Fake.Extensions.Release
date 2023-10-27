@@ -40,9 +40,15 @@ let tests_SemVerArgs =
         testCase "Test SemVerArg :patch" <| fun _ ->
             let result = ["semver:patch"] |> matchSemVerArg 
             Expect.equal result Patch ""
-        testCase "Test SemVerArg :pre-alpha.02" <| fun _ ->
-            let result = ["semver:pre-alpha.02"] |> matchSemVerArg 
-            Expect.equal result (Pre "alpha.02") ""
+    ]
+
+[<Tests>]
+let tests_SemVerPreArgs =
+    testList "SemVerPreArgs" [
+        testCase "Test SemVerPreArg pre:alpha.02" <| fun _ ->
+            let result = ["pre:alpha.02"] |> matchPreArg
+            Expect.isSome result "Is not some"
+            Expect.equal result.Value (Pre "alpha.02") "Has incorrect SemVerPrerelease tag"
     ]
 
 [<Tests>]
